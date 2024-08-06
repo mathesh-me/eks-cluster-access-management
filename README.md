@@ -5,9 +5,10 @@ We all know that **How important is security of our Kubernetes cluster. And when
 This Repository contains the configuration files and steps to implement the below workflow of Access Management in AWS EKS Cluster.
 
 
-## Architecture Diagram
+## Architecture/Workflow Diagram
 
-![EKS Access Management]()
+![Access Management in EKS](https://github.com/user-attachments/assets/3170a6d6-34c3-43d0-b50f-7a4ad5a6b540)
+
 
 ## Prerequisites
 
