@@ -10,6 +10,7 @@ We are going to manage the access to our EKS cluster at two levels:
 
 ### Prerequisites:
 
+- An AWS account with necessary permissions to create EKS cluster.
 - A Linux, Windows or Mac machine with `AWS CLI`, `eksctl`, and `kubectl` installed. You can check the installation of these tools by running the below commands:
 
 ```bash
