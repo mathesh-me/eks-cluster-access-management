@@ -1,4 +1,4 @@
-# Access Management of EKS Cluster
+# Access Management in EKS Cluster
 
 We all know that **How important is security of our Kubernetes cluster. And when it comes to Access Management of EKS Cluster, it becomes more crucial because we must need to provide correct level access to the appropriate users to our EKS cluster**. We should not provide full access to all the users with the cluster. So, We need to manage the access to our EKS cluster properly. In this article, we will discuss how we can give access IAM users to our EKS cluster.
 
@@ -19,7 +19,8 @@ eksctl version
 kubectl version
 ```
 
-![Screenshot 2024-08-05 125301](https://github.com/user-attachments/assets/81a51926-34b3-414e-ba3d-4b9799a12693)
+![Screenshot 2024-08-05 125301](https://github.com/user-attachments/assets/3b677461-84bc-4f85-9695-c851c50dce49)
+
 
 If you don't have these tools installed on your machine, you can follow the below links to install them:
 
@@ -31,16 +32,19 @@ If you don't have these tools installed on your machine, you can follow the belo
 
 In this demo, I am going to use my IAM user named "**developer-briz**". By default, this user doesn't have any access to EKS cluster. I Just created this user for this demo. Also User "**developer-briz**" have only Elastic Beanstalk Full Access till now. You can see the below screenshots to verify the permissions of this user "**developer-briz**".
 
-![Screenshot 2024-08-05 120759](https://github.com/user-attachments/assets/a081a358-f7eb-4380-95ca-86b97dd4560b)
+![Screenshot 2024-08-05 120759](https://github.com/user-attachments/assets/a08b4534-6d5e-4976-b70c-d9a257b4159e)
 
-![Screenshot 2024-08-05 120823](https://github.com/user-attachments/assets/b71334cb-b3d3-4246-87e3-4b082136e6d4)
+![Screenshot 2024-08-05 120823](https://github.com/user-attachments/assets/c22f159c-7c16-4192-b5b5-c34b66cd4bcc)
 
-![Screenshot 2024-08-05 120833](https://github.com/user-attachments/assets/cd555c22-fded-4aba-a770-07ce76657f54)
+![Screenshot 2024-08-05 120833](https://github.com/user-attachments/assets/4e5ace5d-37c5-41ba-8c6d-4d006524d7cc)
+
 
 Now we know, "**developer-briz**" don't have any access to my EKS Cluster. We are going to provide "**developer-briz**" with developer level access to EKS Clsuter. So that he can access the resources which are related to the development environment.<br>
 
 Also you need to create Access Key and Secret Key for this user. You can create it by following this document: [Creating Access Key and Secret Key](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey). Once you create the Access Key and Secret Key, Paste it in some text file. We will use it later.
-![Screenshot 2024-08-05 121849](https://github.com/user-attachments/assets/4a8939b2-0aef-451b-b165-f92ab04e9080)
+
+![Screenshot 2024-08-05 121849](https://github.com/user-attachments/assets/d97986a3-eebc-409f-9e0a-f1a4cf61d70d)
+
 
 Above screenshot is for reference only. You need to create your own IAM user and Access Key and Secret Key.
 
@@ -57,15 +61,18 @@ eksctl create cluster --name eksdemocluster --region us-east-1 --nodegroup-name 
 ```
 You can replace the cluster name, region, node type, and node count as per your requirement.
 
-![Screenshot 2024-08-05 120622](https://github.com/user-attachments/assets/2b29badb-8ed1-425e-a7b4-cb4343ee45f4)
-![Screenshot 2024-08-05 123953](https://github.com/user-attachments/assets/93e25eb9-9a6f-48f4-a69d-630e012f4796)
+![Screenshot 2024-08-05 120622](https://github.com/user-attachments/assets/f4e4a577-350d-4227-92c2-98db4cefb927)
+
+![Screenshot 2024-08-05 123953](https://github.com/user-attachments/assets/4ca7b743-ad0f-4116-bb99-15291617de14)
+
 
 - Once the cluster is created, you can check the status of your cluster using the below command:
 
 ```bash
 eksctl get cluster
 ```
-![Screenshot 2024-08-05 124637](https://github.com/user-attachments/assets/7cec8467-3785-403d-ac68-84b232c1e062)
+
+![Screenshot 2024-08-05 124637](https://github.com/user-attachments/assets/86f137e3-7f1c-4e85-8e38-75b02c6e5222)
 
 
 ### Step 2: Creating Roles and RoleBindings for Developer Based Access
@@ -87,7 +94,8 @@ rules:
   resources: ["pods", "pods/log", "services", "deployments", "replicasets"]
   verbs: ["get", "list", "watch", "create", "update", "delete"]
 ```
-![Screenshot 2024-08-05 125840](https://github.com/user-attachments/assets/92fdc2af-1b4d-4551-ad93-d4e8e044bf25)
+
+![Screenshot 2024-08-05 125840](https://github.com/user-attachments/assets/408ae9ae-3be6-48a6-8ecd-5e031630c0b2)
 
 In the above YAML file, you can see that I have created a role named "developer" and provided access to the resources like pods, services, deployments, replicasets in the development namespace.
 
@@ -108,7 +116,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-![Screenshot 2024-08-05 125859](https://github.com/user-attachments/assets/8173e361-90bd-4423-a65f-b839d699cc48)
+![Screenshot 2024-08-05 125859](https://github.com/user-attachments/assets/0f03880c-0527-4ada-a647-e86efa05712f)
 
 I have created a rolebinding named "developer-binding" and bind the developer role to the user named "developer". Don't worry about the user for now. We will add the user to the EKS cluster in the next step.
 
@@ -124,7 +132,8 @@ kubectl create namespace development
 kubectl apply -f role.yaml
 kubectl apply -f rolebinding.yaml
 ```
-![Screenshot 2024-08-05 130707](https://github.com/user-attachments/assets/8ebd7a53-ae94-4c2b-8520-6d35eb04005a)
+
+![Screenshot 2024-08-05 130707](https://github.com/user-attachments/assets/6002306e-d9ee-44f2-ab9c-1f1bd4760e5b)
 
 You can check the roles and rolebindings by running the below commands:
 
@@ -138,7 +147,8 @@ Now for testing purpose, I am also going to create one Pod in Default namespace.
 ```bash
 kubectl run mypod --image=nginx
 ```
-![Screenshot 2024-08-05 134510](https://github.com/user-attachments/assets/f851e006-e9d7-4254-88e2-ccfa4e7389e3)
+
+![Screenshot 2024-08-05 134510](https://github.com/user-attachments/assets/f11fc51c-8222-4ba8-8499-83d2d0a318ad)
 
 We have created the required roles and rolebindings for the developer user. Now, Let's look at how we can add our IAM user to this EKS cluster.
 
@@ -151,7 +161,8 @@ Before adding the IAM user to the EKS cluster, let's try to access the EKS clust
 aws configure # Provide the Access Key and Secret Key of the IAM user "developer
 ```
 
-![Screenshot 2024-08-05 134812](https://github.com/user-attachments/assets/1a2c0f72-b72e-4c74-a7bf-6f87479a320e)
+![Screenshot 2024-08-05 134812](https://github.com/user-attachments/assets/dbb93e3b-7c9b-41ad-ad01-57abf8c8843b)
+
 
 - You can verify the IAM user by running the below command:
 
@@ -164,7 +175,9 @@ aws sts get-caller-identity
 ```bash
 kubectl get pods
 ```
-![Screenshot 2024-08-05 134855](https://github.com/user-attachments/assets/68b8db59-2b6e-4c00-a2d0-e078d5d2829d)
+
+![Screenshot 2024-08-05 134855](https://github.com/user-attachments/assets/ed1fa634-63e7-48f5-8299-6da3d245ddc5)
+
 
 You can see that the user "developer-briz" doesn't have access to the EKS cluster that's why it's showing the error. Now, we need to give access this user to the EKS cluster. So, he can access the resources in the development namespace.<br>
 
@@ -183,13 +196,11 @@ Once you switch to the user with admin access, you can add the user to the EKS c
 ```bash
 kubectl edit -n kube-system configmap/aws-auth
 ```
-![Screenshot 2024-08-05 135156](https://github.com/user-attachments/assets/ae00a5dd-3db8-4d34-8e39-e69a4fc1077c)
+
+![Screenshot 2024-08-05 135211](https://github.com/user-attachments/assets/9a5f04f1-9f4e-45d9-a9d3-5c0b74a4231d)
 
 
 - It will open the configmap in the default editor. I am using Windows, So in my case the default editor is Notepad. You need to add the below code in the "mapUsers" section of the configmap. You can see the below code for reference:
-
-![Screenshot 2024-08-05 135508](https://github.com/user-attachments/assets/3607d275-670f-4979-a273-6a2d803e06b6)
-
 ```yaml
 mapUsers: |
     - userarn: arn:aws:iam::655436663840:user/developer-briz
@@ -197,6 +208,9 @@ mapUsers: |
       groups:
       - developer
 ```
+
+![Screenshot 2024-08-05 135156](https://github.com/user-attachments/assets/dc5ef191-b28f-4ce6-b761-d8e56a21bf3a)
+![Screenshot 2024-08-05 135508](https://github.com/user-attachments/assets/68c10f9b-6553-4032-a068-b6aeafa330c0)
 
 2. **For Granting Admin Access to EKS Cluster**
 
@@ -222,13 +236,16 @@ aws configure
 ```bash
 kubectl get pods -n development
 ```
-![Screenshot 2024-08-05 135624](https://github.com/user-attachments/assets/25eec15a-f1b5-430f-a9dc-203ac272ccba)
 
-You can see in the above screenshot, the developer user can list the pods in the development namespace. That means the "developer-briz" now have access to the EKS cluster. But If we try to list the pods in the default namespace, we will get the error
+![Screenshot 2024-08-05 135624](https://github.com/user-attachments/assets/efe7957e-f704-4419-b30d-be8d242567bc)
 
-![Screenshot 2024-08-05 135724](https://github.com/user-attachments/assets/d03b90c5-61ec-47a4-8be1-9cd248eca673)
 
-![Screenshot 2024-08-05 135929](https://github.com/user-attachments/assets/5daead34-4e75-42f2-a16b-9caa5e30825c)
+You can see in the above screenshot, the developer user can list the pods in the development namespace. That means the "developer-briz" now have access to the EKS cluster. But If we try to list the pods in the default namespace, we will get the error that's also you can see in that Picture.
+
+![Screenshot 2024-08-05 135724](https://github.com/user-attachments/assets/5c1ef4d1-7cee-4212-91c3-5a42ab149718)
+
+![Screenshot 2024-08-05 135929](https://github.com/user-attachments/assets/186a2e15-90a9-46b4-9d9f-7e983d2f4219)
+
 
 Now we can see that the developer user can access the resources in the development namespace but not in the default namespace. That's how we can provide granular access to the EKS cluster.
 
@@ -240,9 +257,11 @@ Once you are done with the testing, you can delete the EKS cluster by running th
 eksctl delete cluster --name eksdemocluster
 ```
 If you are using "developer-briz" user, then you need to switch to the user with admin access to delete the EKS cluster. Otherwise, you will get the below error:
-![Screenshot 2024-08-05 140123](https://github.com/user-attachments/assets/13e78022-69a5-492d-8ed6-5c7da612da49)
+
+![Screenshot 2024-08-05 140123](https://github.com/user-attachments/assets/0ec4d46a-0f3a-4623-a264-acca434cde8f)
 
 Once you switch to user with admin access, you can delete the EKS cluster by running the above command.
-![Screenshot 2024-08-05 140238](https://github.com/user-attachments/assets/7f822193-ead2-4687-9397-9924d53a5ea0).
+
+![Screenshot 2024-08-05 140238](https://github.com/user-attachments/assets/60a79bc3-735d-4637-bf01-c4dd7068d830)
 
 That's it. We have successfully managed the access to our EKS cluster at two levels: Granular Access and Admin Access. You can follow these same steps to provide access to your IAM users to the EKS cluster.
