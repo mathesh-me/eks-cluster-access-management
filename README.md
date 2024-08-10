@@ -18,7 +18,7 @@ This Repository contains the configuration files and steps to implement the belo
 ## Usage
 
 - Refer the [Steps](./steps.md) to implement the workflow.<br>
-- Medium Article: [Access Management in AWS EKS Cluster](https://medium.com/@mathesh-me/access-management-in-aws-eks-cluster-1b3b3b3b3b3b)
+- Medium Article: [Access Management in AWS EKS Cluster](https://medium.com/towards-aws/granting-iam-users-access-to-eks-clusters-a-step-by-step-guide-fc8639dcea39)
 
 ## Contributing
 
